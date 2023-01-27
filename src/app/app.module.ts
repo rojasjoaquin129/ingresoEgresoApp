@@ -17,7 +17,8 @@ import { AngularFireModule } from '@angular/fire/compat'
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth'
 import { environment } from '../environments/environment.prod';
-
+import { StoreModule } from '@ngrx/store';
+import { appReducers } from './app.reducer';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { environment } from '../environments/environment.prod';
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    StoreModule.forRoot(appReducers),
   ],
   providers: [],
   bootstrap: [AppComponent]

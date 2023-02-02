@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.store.dispatch(stopLoading())
       this.nameButton = 'Login'
       this.router.navigate(['/']);
-    }).catch(err => this.alertService.mensajeDeError(err.message).then(() => {
+    }).catch(err => this.alertService.mensajeDeError(err.message, 'error').then(() => {
       this.store.dispatch(stopLoading())
       this.loginForm.reset();
       this.nameButton = 'Login'

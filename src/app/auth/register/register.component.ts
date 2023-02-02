@@ -59,7 +59,7 @@ export class RegisterComponent implements OnInit {
       this.store.dispatch(stopLoading())
       this.router.navigate(['/']);
       this.nameButton = 'Login'
-    }).catch(err => this.alertService.mensajeDeError(err.message).then(() => {
+    }).catch(err => this.alertService.mensajeDeError(err.message, 'error').then(() => {
       this.store.dispatch(stopLoading())
       this.registroForm.reset();
       this.nameButton = 'Login'

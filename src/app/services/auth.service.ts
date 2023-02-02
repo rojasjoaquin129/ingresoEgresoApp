@@ -6,6 +6,7 @@ import { Usuario } from '../models/usuario.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../app.reducer';
 import * as authActions from '../auth/auth.actions';
+import { unSetItems } from '../ingreso-egreso/ingreso-egreso.actions';
 
 
 @Injectable({
@@ -16,22 +17,26 @@ export class AuthService {
 
   constructor(public auth: AngularFireAuth,
     private firestore: AngularFirestore,
-    private store: Store<AppState>) { }
+    private store: Store<AppState>) {
 
-  private usuarios = this.firestore.collection<Usuario>('usuarios');
+  }
+
+  //private usuarios = this.firestore.collection<Usuario>('usuarios');
   private getUsuarios$: Subscription | null = null;
   iniAuthListener() {
 
     this.auth.authState.subscribe(fUser => {
       if (fUser) {
-        this.getUsuarios$ = this.usuarios.doc(fUser.uid).valueChanges().subscribe(usuario => {
+        this.getUsuarios$ = this.firestore.doc(`${fUser.uid}/usuario`).valueChanges().subscribe((usuario: any) => {
           if (usuario) {
             this.store.dispatch(authActions.setUser({ user: usuario }))
+
           }
         })
       } else {
-        this.getUsuarios$?.unsubscribe();
+        this.getUsuarios$?.unsubscribe()
         this.store.dispatch(authActions.unSetUser());
+        this.store.dispatch(unSetItems())
       }
 
     })
@@ -43,7 +48,10 @@ export class AuthService {
       .then(({ user }) => {
         if (user?.uid) {
           const newUser = new Usuario(user.uid, nombre, email)
-          this.usuarios.doc(user.uid).set({ ...newUser })
+          //caambiamos para poder tener un orden como esta planteado
+
+          this.firestore.doc(`${user.uid}/usuario`).set({ ...newUser })
+          //this.usuarios.doc(user.uid).set({ ...newUser })
         }
       })
   }

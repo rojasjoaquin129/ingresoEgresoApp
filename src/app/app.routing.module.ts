@@ -9,7 +9,13 @@ import { AuthGuard } from './services/auth.guard';
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: '', component: DashboardComponent, children: dashboardRoutes, canActivate: [AuthGuard] },
+  //LAZY-LOADING => mejoramiento se cargan los modulos por medio del routing  y no por modulos como antes , mejora un monton a la hora de compilacion y reacion de la app"
+  {
+    path: '',
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./ingreso-egreso/ingreso-egreso.module').then(m => m.IngresoEgresoModule)
+  },
+  //
   { path: '**', redirectTo: '' },
 ]
 
